@@ -2,8 +2,7 @@ from fastapi import FastAPI
 from .database import Base, engine
 from .routers import auth as auth_router, studios, modelos, tokens
 
-# Create database tables
-Base.metadata.create_all(bind=engine)
+# Database tables are created during container start via init_db.py
 
 app = FastAPI(title="Studio Tokens API")
 
