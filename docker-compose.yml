@@ -9,7 +9,9 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
   backend:
-    build: ./backend
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/studio
       JWT_SECRET_KEY: changeme

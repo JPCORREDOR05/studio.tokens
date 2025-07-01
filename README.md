@@ -10,21 +10,21 @@ Este proyecto provee una API en **FastAPI** junto con un placeholder de frontend
 - [Docker](https://docs.docker.com/get-docker/) y [Docker Compose](https://docs.docker.com/compose/).
 
 ## Puesta en marcha rápida
-1. Copia el archivo `.env.example` a `.env` en la raíz del proyecto y ajusta las variables si es necesario.
-2. Ejecuta:
+Ejecuta directamente:
 
 ```bash
 docker-compose up --build
 ```
 
 Esto creará los contenedores de base de datos y backend. La API quedará disponible en `http://localhost:8000`.
+Al iniciar por primera vez se generará automáticamente el usuario `juan-pablo` con rol `superadmin`. La contraseña se mostrará en los logs del contenedor `backend`.
 
 ## Variables de entorno
 El servicio `backend` usa las siguientes variables de entorno:
 - `DATABASE_URL` – cadena de conexión a PostgreSQL.
 - `JWT_SECRET_KEY` – clave secreta para firmar los tokens JWT.
 
-Puedes modificar estos valores en el archivo `.env` o directamente en `docker-compose.yml`.
+Estas variables ya vienen definidas en `docker-compose.yml`, por lo que no es necesario crear manualmente un archivo `.env`.
 
 ## Esquema de la base de datos
 El modelo sigue la estructura propuesta con tablas para usuarios, modelos y registros diarios de tokens para Chaturbate y Stripchat.
