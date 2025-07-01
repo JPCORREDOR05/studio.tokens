@@ -8,6 +8,7 @@ Este proyecto provee una API en **FastAPI** junto con un placeholder de frontend
 
 ## Requisitos
 - [Docker](https://docs.docker.com/get-docker/) y [Docker Compose](https://docs.docker.com/compose/).
+- Python 3.10 si deseas ejecutar sin Docker (requiere las dependencias listadas en `backend/requirements.txt`)
 
 ## Puesta en marcha rápida
 Ejecuta directamente:
@@ -26,6 +27,8 @@ El servicio `backend` usa las siguientes variables de entorno:
 - `JWT_SECRET_KEY` – clave secreta para firmar los tokens JWT.
 
 Estas variables ya vienen definidas en `docker-compose.yml`, por lo que no es necesario crear manualmente un archivo `.env`.
+
+Si ejecutas el backend sin Docker asegúrate de instalar también la librería `python-multipart`, necesaria para procesar los formularios de login con FastAPI.
 
 ## Esquema de la base de datos
 El modelo sigue la estructura propuesta con tablas para usuarios, modelos y registros diarios de tokens para Chaturbate y Stripchat.
