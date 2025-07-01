@@ -16,7 +16,8 @@ Ejecuta directamente:
 docker-compose up --build
 ```
 
-Esto creará los contenedores de base de datos y backend. La API quedará disponible en `http://localhost:8000`.
+Esto creará los contenedores de base de datos y backend. Puede tardar unos segundos en estar disponible mientras el backend espera a que la base de datos acepte conexiones.
+La API quedará disponible en `http://localhost:8000`.
 Al iniciar por primera vez se generará automáticamente el usuario `juan-pablo` con rol `superadmin`. La contraseña se mostrará en los logs del contenedor `backend`.
 
 ## Variables de entorno
