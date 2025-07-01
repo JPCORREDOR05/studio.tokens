@@ -19,6 +19,18 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.refresh(db_user)
     return db_user
 
+def get_users(db: Session) -> List[models.User]:
+    return db.query(models.User).all()
+
+
+def delete_user(db: Session, user_id: int) -> bool:
+    user = get_user(db, user_id)
+    if user:
+        db.delete(user)
+        db.commit()
+        return True
+    return False
+
 # Model operations
 def create_model(db: Session, model: schemas.ModelCreate, user_id: int):
     db_model = models.Model(**model.dict(), created_by=user_id)

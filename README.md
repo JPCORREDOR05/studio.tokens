@@ -23,6 +23,8 @@ La API quedará disponible en `http://localhost:8000` y el frontend en `http://l
 Al acceder al frontend se mostrará un formulario de inicio de sesión.
 Al iniciar por primera vez se generará automáticamente el usuario `juan-pablo` con rol `superadmin`. La contraseña se mostrará en los logs del contenedor `backend`.
 
+El superadministrador puede crear y eliminar estudios (usuarios administradores) desde el dashboard web o mediante las rutas `/studios` de la API.
+
 ## Variables de entorno
 El servicio `backend` usa las siguientes variables de entorno:
 - `DATABASE_URL` – cadena de conexión a PostgreSQL.

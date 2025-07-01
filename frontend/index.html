@@ -82,20 +82,62 @@
     async function renderDashboard() {
       const token = localStorage.getItem(TOKEN_KEY);
       if (!token) { renderLogin(); return; }
+      const userRes = await fetch(`${API_URL}/studios/me`, {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      if (!userRes.ok) { renderLogin(); return; }
+      const user = await userRes.json();
+
       const res = await fetch(`${API_URL}/reports/summary`, {
         headers: { 'Authorization': 'Bearer ' + token }
       });
       if (!res.ok) { renderLogin(); return; }
       const summary = await res.json();
-      let html = '<h2>Resumen</h2><ul>';
+
+      let html = `<h2>Bienvenido, ${user.username}</h2><h3>Resumen</h3><ul>`;
       for (const m of summary.models) {
         html += `<li>${m.name}: ${m.tokens} tokens – USD ${m.usd.toFixed(2)} – COP ${m.cop.toFixed(0)}</li>`;
       }
       html += '</ul>';
       html += `<p>Total USD: ${summary.total_usd.toFixed(2)}</p>`;
       html += `<p>Total COP: ${summary.total_cop.toFixed(0)}</p>`;
+
+      if (user.role === 'superadmin') {
+        html += `
+          <h3>Crear studio</h3>
+          <form id="create-studio">
+            <input type="text" id="new-username" placeholder="Usuario" required />
+            <input type="password" id="new-password" placeholder="Contrase\u00f1a" required />
+            <button type="submit">Crear</button>
+          </form>
+          <p id="studio-error" style="color:red;"></p>
+        `;
+      }
+
       html += '<button id="logout">Cerrar sesi\u00f3n</button>';
       app.innerHTML = html;
+
+      if (user.role === 'superadmin') {
+        document.getElementById('create-studio').addEventListener('submit', async e => {
+          e.preventDefault();
+          const username = document.getElementById('new-username').value;
+          const password = document.getElementById('new-password').value;
+          const res = await fetch(`${API_URL}/studios/`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({username, password})
+          });
+          if (res.ok) {
+            document.getElementById('studio-error').textContent = 'Creado';
+          } else {
+            document.getElementById('studio-error').textContent = 'Error al crear';
+          }
+        });
+      }
+
       document.getElementById('logout').onclick = () => {
         localStorage.removeItem(TOKEN_KEY);
         renderLogin();
