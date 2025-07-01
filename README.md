@@ -1,10 +1,11 @@
 # Studio Tokens Platform
 
-Este proyecto provee una API en **FastAPI** y un frontend en **React**. La base de datos utilizada es **PostgreSQL** y todo el entorno se puede levantar fácilmente con Docker Compose.
+Este proyecto provee una API en **FastAPI** y un frontend estático en **HTML/JS**.
+La base de datos utilizada es **PostgreSQL** y todo el entorno se puede levantar fácilmente con Docker Compose.
 
 ## Estructura
 - `backend/` – Código de la API (FastAPI) y modelos de base de datos.
-- `frontend/` – Código React que se sirve en el puerto `3000` al levantar los contenedores.
+- `frontend/` – Archivos estáticos que se sirven en el puerto `3000` al levantar los contenedores.
 
 ## Requisitos
 - [Docker](https://docs.docker.com/get-docker/) y [Docker Compose](https://docs.docker.com/compose/).

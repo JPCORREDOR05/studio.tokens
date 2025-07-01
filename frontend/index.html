@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Studio Tokens</title>
+  <style>
+    body {
+      background-color: #f0f2f5;
+      font-family: Arial, sans-serif;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #1976d2;
+      color: white;
+      padding: 1rem;
+    }
+    button {
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+    input {
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      width: 100%;
+    }
+    .container {
+      max-width: 500px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Studio Tokens</h1>
+  </header>
+  <div id="app" class="container">Cargando...</div>
+  <script>
+    const API_URL = 'http://localhost:8000';
+    const app = document.getElementById('app');
+    const TOKEN_KEY = 'token';
+
+    function renderLogin(errorMsg='') {
+      app.innerHTML = `
+        <h2>Iniciar sesi\u00f3n</h2>
+        <form id="login-form">
+          <input type="text" id="username" placeholder="Usuario" required />
+          <input type="password" id="password" placeholder="Contrase\u00f1a" required />
+          <button type="submit">Entrar</button>
+          <p id="error" style="color:red;">${errorMsg}</p>
+        </form>
+      `;
+      document.getElementById('login-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        try {
+          const res = await fetch(`${API_URL}/auth/login`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: new URLSearchParams({username, password})
+          });
+          if (!res.ok) throw new Error();
+          const data = await res.json();
+          localStorage.setItem(TOKEN_KEY, data.access_token);
+          renderDashboard();
+        } catch {
+          renderLogin('Credenciales incorrectas');
+        }
+      });
+    }
+
+    async function renderDashboard() {
+      const token = localStorage.getItem(TOKEN_KEY);
+      if (!token) { renderLogin(); return; }
+      const res = await fetch(`${API_URL}/reports/summary`, {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      if (!res.ok) { renderLogin(); return; }
+      const summary = await res.json();
+      let html = '<h2>Resumen</h2><ul>';
+      for (const m of summary.models) {
+        html += `<li>${m.name}: ${m.tokens} tokens – USD ${m.usd.toFixed(2)} – COP ${m.cop.toFixed(0)}</li>`;
+      }
+      html += '</ul>';
+      html += `<p>Total USD: ${summary.total_usd.toFixed(2)}</p>`;
+      html += `<p>Total COP: ${summary.total_cop.toFixed(0)}</p>`;
+      html += '<button id="logout">Cerrar sesi\u00f3n</button>';
+      app.innerHTML = html;
+      document.getElementById('logout').onclick = () => {
+        localStorage.removeItem(TOKEN_KEY);
+        renderLogin();
+      };
+    }
+
+    renderDashboard();
+  </script>
+</body>
+</html>
